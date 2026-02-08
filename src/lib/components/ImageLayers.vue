@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 
 import image1 from '$lib/assets/textures/testCharacter---.png';
-import image2 from '$lib/assets/textures/amman-in-negative.png';
+import image2 from '$lib/assets/textures/Amman-in-negative.png';
 import noise1 from '$lib/assets/textures/noise1.jpg';
 import glitch1 from '$lib/assets/textures/glitch1.jpg';
 import skaura from '$lib/assets/textures/skaura.gif';
