@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import lines from '$lib/assets/textures/lines.png';
+import leafsFalling from '$lib/components/leafsFalling.gif';
 
 type Layer = 'back' | 'front';
 
@@ -14,7 +14,7 @@ const props = withDefaults(
 		flowSpeed?: number;
 	}>(),
 	{
-		src: lines,
+		src: leafsFalling,
 		opacity: 0.5,
 		size: '1920px',
 		blend: 'multiply',

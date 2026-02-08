@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
-import texture from '@/lib/assets/textures/lines.png';
+import texture from '@/lib/components/leafsFalling.gif';
+import neve from '@/lib/components/neve.gif';
+import ammanImage from '@/lib/assets/textures/Amman-in-negative.png';
+import wallCastel from '@/lib/assets/textures/wall_castelStone.avif';
 
 import ForegroundGif from '@/lib/components/ForegroundGif.vue';
 import ImageLayers from '@/lib/components/ImageLayers.vue';
@@ -9,9 +13,20 @@ import Sidebar from '@/lib/components/Sidebar.vue';
 import TextureBackground from '@/lib/components/TextureBackground.vue';
 import TextureBackgroundNoise from '@/lib/components/TextureBackgroundNoise.vue';
 
+const route = useRoute();
 const collapsed = ref(false);
 
 const lowPower = ref(false);
+
+// Usar Amman-in-negative na home, wall_castelStone nas outras páginas
+const cityImage = computed(() => {
+	return route.path === '/' || route.path === '/Portfolio/' ? ammanImage : wallCastel;
+});
+
+// Usar neve.gif na home, leafsFalling.gif nas outras páginas
+const foregroundGifImage = computed(() => {
+	return route.path === '/' || route.path === '/Portfolio/' ? neve : texture;
+});
 
 const effectsEnabled = computed(() => !lowPower.value);
 const parallaxEnabled = computed(() => !lowPower.value);
@@ -83,6 +98,8 @@ watch(collapsed, () => updateSidebarClass(), { flush: 'post' });
 				:animate="effectsEnabled"
 				:pointerParallax="parallaxEnabled"
 				:globalStrength="layersStrength"
+				:cityImage="cityImage"
+				:foregroundGifImage="foregroundGifImage"
 			/>
 
 			<div class="page-wrapper">
@@ -102,6 +119,8 @@ watch(collapsed, () => updateSidebarClass(), { flush: 'post' });
 				<TextureBackgroundNoise :opacity="noiseOpacity" :speed="noiseSpeed" :scale="170" />
 			</div>
 
+			<!-- ForegroundGif (neve pequeno) removido - usando apenas layer no ImageLayers -->
+			<!--
 			<ForegroundGif
 				align="right"
 				width="min(38vmin,480px)"
@@ -113,6 +132,7 @@ watch(collapsed, () => updateSidebarClass(), { flush: 'post' });
 				:deferMs="fgDeferMs"
 				:useIdle="true"
 			/>
+			-->
 		</section>
 	</div>
 </template>

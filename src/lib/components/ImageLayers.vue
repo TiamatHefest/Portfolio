@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import image1 from '$lib/assets/textures/testCharacter---.png';
+// import image1 from '$lib/assets/textures/testCharacter---.png'; // REMOVIDO
 import image2 from '$lib/assets/textures/Amman-in-negative.png';
-import noise1 from '$lib/assets/textures/noise1.jpg';
-import glitch1 from '$lib/assets/textures/glitch1.jpg';
-import skaura from '$lib/assets/textures/skaura.gif';
+import wallCastel from '$lib/assets/textures/wall_castelStone.avif';
+// import noise1 from '$lib/assets/textures/noise1.jpg'; // COMENTADO - substituído por leafsFalling
+import leafsFalling from '$lib/components/leafsFalling.gif';
+// import glitch1 from '$lib/assets/textures/glitch1.jpg'; // DESATIVADO
+import neve from '$lib/components/neve.gif';
 
 type LayerSpec = {
 	img: string;
@@ -31,20 +33,24 @@ const props = withDefaults(
 		animate?: boolean;
 		globalStrength?: number;
 		perspectiveComp?: number;
+		cityImage?: string;
+		foregroundGifImage?: string;
 	}>(),
 	{
 		layers: () => ({
-			texture: { img: noise1, z: -900, scale: 1.9, strength: 15, opacity: 0.3 },
-			city: { img: image2, z: -650, scale: 2.2, strength: 25, opacity: 0.65 },
-			midFx: { img: glitch1, z: -420, scale: 1.4, strength: 40, opacity: 0.4 },
-			front: { img: image1, z: -180, scale: 1.15, strength: 55, opacity: 0.85 },
-			foregroundGif: { img: skaura, z: -60, scale: 1.05, strength: 65, opacity: 0.95 },
+			// texture: { img: noise1, z: -900, scale: 1.9, strength: 15, opacity: 0.3 }, // COMENTADO - noise substituído
+			texture: { img: leafsFalling, z: -900, scale: 1.0, strength: 15, opacity: 0.3 }, // leafsFalling.gif com repetição horizontal
+			city: { img: image2, z: -650, scale: 1.5, strength: 25, opacity: 0.65 },
+			// midFx: { img: glitch1, z: -420, scale: 1.4, strength: 40, opacity: 0.4 }, // DESATIVADO
+			// front: { img: image1, z: -180, scale: 1.15, strength: 55, opacity: 0.85 }, // REMOVIDO
+			foregroundGif: { img: leafsFalling, z: -60, scale: 2.2, strength: 65, opacity: 0.95 },
 		}),
 		baseZ: -50,
 		pointerParallax: true,
 		animate: true,
 		globalStrength: 1,
 		perspectiveComp: 1,
+		cityImage: image2,
 	}
 );
 
@@ -66,6 +72,16 @@ const stageStyle = computed(() => ({
 	'--perspComp': String(props.perspectiveComp),
 }));
 
+const cityLayer = computed(() => ({
+	...props.layers.city,
+	img: props.cityImage
+}));
+
+const foregroundGifLayer = computed(() => ({
+	...props.layers.foregroundGif,
+	img: props.foregroundGifImage || props.layers.foregroundGif.img
+}));
+
 function layerStyle(layer: LayerSpec) {
 	return {
 		'--img': `url(${layer.img})`,
@@ -85,9 +101,10 @@ function layerStyle(layer: LayerSpec) {
 		aria-hidden="true"
 	>
 		<div class="layer layer-texture" data-name="texture" :style="layerStyle(props.layers.texture)"></div>
-		<div class="layer layer-city" data-name="city" :style="layerStyle(props.layers.city)"></div>
-		<div class="layer layer-midFx" data-name="midFx" :style="layerStyle(props.layers.midFx)"></div>
-		<div class="layer layer-front" data-name="front" :style="layerStyle(props.layers.front)"></div>
+		<div class="layer layer-city" data-name="city" :style="layerStyle(cityLayer)"></div>
+		<!-- <div class="layer layer-midFx" data-name="midFx" :style="layerStyle(props.layers.midFx)"></div> -->
+		<!-- <div class="layer layer-front" data-name="front" :style="layerStyle(props.layers.front)"></div> -->
+		<div class="layer layer-foregroundGif" data-name="foregroundGif" :style="layerStyle(foregroundGifLayer)"></div>
 		<div class="content-slot" aria-hidden="false"><slot /></div>
 	</section>
 </template>
@@ -131,25 +148,31 @@ function layerStyle(layer: LayerSpec) {
 		filter: saturate(.9);
 	}
 
-	/* ESPECÍFICAS */
-	.layer-texture { filter: contrast(1.25) brightness(0.55); mix-blend-mode:multiply; animation: scan 1.4s linear infinite, layerDrift 40s ease-in-out infinite; }
-	.layer-city { filter: brightness(.55) contrast(.9) blur(1.5px); /* ATMOSFERA / PROFUNDIDADE */ }
-	.layer-midFx { mix-blend-mode:screen; filter: blur(2px) brightness(.65) contrast(1.1); animation: glitchShift 6s steps(2,end) infinite, layerDrift 24s ease-in-out infinite; }
-	.layer-front { filter: contrast(1.05) brightness(.92) drop-shadow(0 0 6px rgba(255,255,255,0.08)); }
-	.layer-foregroundGif { mix-blend-mode:screen; filter: brightness(1.05) contrast(1.05) drop-shadow(0 0 4px rgba(255,90,170,0.35)); animation: float 7s ease-in-out infinite, layerDrift 32s ease-in-out infinite, chroma 5s linear infinite; }
+	/* ESPECÍFICAS - Animações simplificadas para melhor performance */
+	/* layer-texture: leafsFalling.gif repetindo horizontalmente ocupando tela inteira */
+	.layer-texture { 
+		filter: contrast(1.2) brightness(0.6); 
+		mix-blend-mode:multiply; 
+		animation: layerDrift 50s ease-in-out infinite;
+		background-size: auto 100%; /* Altura 100%, largura automática */
+		background-repeat: repeat-x; /* Repetição horizontal */
+		background-position: center center;
+	}
+	.layer-city { filter: brightness(.6) contrast(.9) blur(1px); animation: layerDrift 40s ease-in-out infinite; }
+	/* .layer-midFx - DESATIVADO */
+	/* .layer-front - REMOVIDO */
+	.layer-foregroundGif { mix-blend-mode:screen; filter: brightness(1.05) contrast(1.05) drop-shadow(0 0 4px rgba(255,90,170,0.35)); animation: float 9s ease-in-out infinite; }
 
-	/* Comentário: Ajuste a intensidade de vibração 'glitchShift' ou remova se não quiser efeito */
+	/* Comentário: Removidas animações pesadas scan, glitchShift e chroma para melhor performance */
 
 	/* VARIÁVEIS GLOBAIS aplicadas via style inline JS */
 	:root, .depth-stage { --gStrength: 1; --perspComp: 1; }
 	.depth-stage { --gStrength: calc(var(--gStrength) * 1); --perspComp: calc(var(--perspComp) * 1); }
 
-	/* ANIMAÇÕES */
-	@keyframes layerDrift { 0%{ transform:translate3d(0,0,var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))); } 50%{ transform:translate3d(0,-0.8%,var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))); } 100%{ transform:translate3d(0,0,var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))); } }
-	@keyframes scan { 0%{ background-position:0 0; } 100%{ background-position:0 880px; } }
-	@keyframes float { 0%,100%{ transform:translate3d(calc(var(--mx)*var(--strength)*1px), calc(var(--my)*var(--strength)*1px), var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))) translateY(-2%); } 50%{ transform:translate3d(calc(var(--mx)*var(--strength)*1px), calc(var(--my)*var(--strength)*1px), var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))) translateY(2%); } }
-	@keyframes glitchShift { 0%,100%{ filter: blur(2px) brightness(.65) contrast(1.1); } 48%{ filter: blur(2px) brightness(.65) contrast(1.1); } 49%{ filter: blur(2px) brightness(.8) contrast(1.25) hue-rotate(10deg); transform:translate3d(2px, -1px, var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))); } 50%{ filter: blur(2px) brightness(.55) contrast(1.2) hue-rotate(-12deg); transform:translate3d(-3px,1px,var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))); } 51%{ filter: blur(2px) brightness(.65) contrast(1.1); } }
-	@keyframes chroma { 0%,100%{ filter: brightness(1.05) contrast(1.05) drop-shadow(0 0 4px rgba(255,90,170,0.35)); } 50%{ filter: brightness(1.08) contrast(1.08) drop-shadow(0 0 8px rgba(255,40,120,0.4)); } }
+	/* ANIMAÇÕES - Simplificadas para reduzir travadas */
+	@keyframes layerDrift { 0%{ transform:translate3d(0,0,var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))); } 50%{ transform:translate3d(0,-0.4%,var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))); } 100%{ transform:translate3d(0,0,var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))); } }
+	@keyframes float { 0%,100%{ transform:translate3d(calc(var(--mx)*var(--strength)*1px), calc(var(--my)*var(--strength)*1px), var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))) translateY(-1.5%); } 50%{ transform:translate3d(calc(var(--mx)*var(--strength)*1px), calc(var(--my)*var(--strength)*1px), var(--z)) scale(calc(var(--scale,1)*var(--perspComp,1))) translateY(1.5%); } }
+	/* Animações scan, glitchShift e chroma removidas para melhor performance */
 
 	/* RESPONSIVO */
 	@media (max-width: 900px) {

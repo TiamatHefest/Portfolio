@@ -36,21 +36,11 @@ let itemStride = 0;
 let itemWidth = 0;
 let currentIndex = 0;
 let baseLen = 0;
-let canDrag = true;
 let isMobile = false;
 let isPhone = false;
 let singlePerLine = false;
 const useLoop = ref(true);
 
-let dragging = false;
-let pendingDrag = false;
-let wasDragging = false;
-let dragStartX = 0;
-let dragStartTranslate = 0;
-let lastMoveX = 0;
-let lastMoveTime = 0;
-let dragVelocity = 0;
-const DRAG_THRESHOLD = 6;
 let animating = false;
 
 const baseOrientations = ref<boolean[]>([]);
@@ -80,10 +70,14 @@ function handleResize() {
 }
 
 let resizeRaf = 0;
+let resizeTimeout = 0;
 function onResize() {
 	handleResize();
+	if (resizeTimeout) clearTimeout(resizeTimeout);
 	if (resizeRaf) cancelAnimationFrame(resizeRaf);
-	resizeRaf = requestAnimationFrame(() => setup());
+	resizeTimeout = window.setTimeout(() => {
+		resizeRaf = requestAnimationFrame(() => setup());
+	}, 150);
 }
 
 function ensureOrientations() {
@@ -134,10 +128,8 @@ function setup() {
 		currentIndex = 0;
 		const cw = containerEl.value?.clientWidth || 0;
 		if (totalWidth < cw) {
-			canDrag = false;
 			translateX.value = (cw - totalWidth) / 2;
 		} else {
-			canDrag = true;
 			translateX.value = 0;
 		}
 	}
@@ -155,11 +147,11 @@ function snapImmediate() {
 }
 
 function animateTo(target: number) {
-	const fastEase = singlePerLine ? 0.18 : 0.12;
+	const fastEase = singlePerLine ? 0.35 : 0.28; // Animação muito mais rápida
 	animating = true;
 	function step() {
 		translateX.value += (target - translateX.value) * fastEase;
-		const threshold = singlePerLine ? 0.35 : 0.5;
+		const threshold = singlePerLine ? 1.5 : 2; // Threshold maior para parar mais cedo
 		if (Math.abs(target - translateX.value) < threshold) {
 			translateX.value = target;
 			animating = false;
@@ -203,113 +195,7 @@ function snapToClosest() {
 	animateTo(target);
 }
 
-function pointerDown(e: PointerEvent) {
-	if (!trackEl.value) return;
-	if (!canDrag) return;
-	if ((e.target as HTMLElement).closest('.open-btn')) {
-		pendingDrag = false;
-		return;
-	}
-	pendingDrag = true;
-	wasDragging = false;
-	dragging = false;
-	animating = false;
-	try {
-		trackEl.value.setPointerCapture(e.pointerId);
-	} catch {}
-	dragStartX = e.clientX;
-	dragStartTranslate = translateX.value;
-	lastMoveX = e.clientX;
-	lastMoveTime = performance.now();
-	dragVelocity = 0;
-	if (autoTimer) {
-		clearInterval(autoTimer);
-		autoTimer = null;
-	}
-}
 
-function pointerMove(e: PointerEvent) {
-	if (!pendingDrag) return;
-	const dx = e.clientX - dragStartX;
-	if (!dragging && Math.abs(dx) > DRAG_THRESHOLD) {
-		dragging = true;
-		wasDragging = true;
-	}
-	if (!dragging) return;
-
-	let next = dragStartTranslate + dx;
-	if (isMobile) {
-		const cw = containerEl.value?.clientWidth || 0;
-		const totalWidth = positions.length ? positions[positions.length - 1] + itemWidth : 0;
-		if (!useLoop.value) {
-			const minTranslate = -(totalWidth - cw);
-			const maxTranslate = 0;
-			if (next < minTranslate) next = minTranslate;
-			if (next > maxTranslate) next = maxTranslate;
-		} else {
-			if (singlePerLine) {
-				const maxTranslate = itemStride * 1.1;
-				const minTranslate = -(totalWidth - itemWidth - itemStride * 1.1);
-				if (next > maxTranslate) next = maxTranslate;
-				if (next < minTranslate) next = minTranslate;
-			} else {
-				const minTranslate = -(totalWidth - itemWidth - cw * 0.12);
-				const maxTranslate = cw * 0.12;
-				if (next < minTranslate) next = minTranslate;
-				if (next > maxTranslate) next = maxTranslate;
-			}
-		}
-	}
-
-	translateX.value = next;
-
-	const now = performance.now();
-	const dt = now - lastMoveTime;
-	if (dt > 0) {
-		dragVelocity = (e.clientX - lastMoveX) / dt;
-		lastMoveX = e.clientX;
-		lastMoveTime = now;
-	}
-}
-
-function pointerUp(e: PointerEvent) {
-	if (!pendingDrag) return;
-	const clickedOpen = !!(e.target as HTMLElement).closest('.open-btn');
-	try {
-		trackEl.value?.releasePointerCapture(e.pointerId);
-	} catch {}
-
-	if (!clickedOpen && dragging) {
-		if (singlePerLine) {
-			const totalDx = translateX.value - dragStartTranslate;
-			const progress = Math.abs(totalDx) / (itemStride || 1);
-			const flick = Math.abs(dragVelocity) > 0.3;
-			if (progress > 0.18 || flick) {
-				if (totalDx < 0) currentIndex += 1;
-				else currentIndex -= 1;
-				if (useLoop.value) {
-					if (currentIndex >= baseLen * 2) currentIndex -= baseLen;
-					if (currentIndex < baseLen) currentIndex += baseLen;
-				}
-			}
-			const pos = positions[currentIndex] ?? 0;
-			animateTo(-pos);
-		} else if (!isMobile) {
-			snapToClosest();
-		}
-	}
-
-	pendingDrag = false;
-	dragging = false;
-	startAuto();
-}
-
-function pointerCancel() {
-	if (!pendingDrag) return;
-	pendingDrag = false;
-	dragging = false;
-	startAuto();
-}
 
 function startAuto() {
 	if (!props.autoAdvance) return;
@@ -317,7 +203,7 @@ function startAuto() {
 	if (!browser) return;
 	if (autoTimer) clearInterval(autoTimer);
 	autoTimer = window.setInterval(() => {
-		if (dragging || animating) return;
+		if (animating) return;
 		currentIndex += 1;
 		const cw = containerEl.value?.clientWidth || 0;
 		if (singlePerLine) {
@@ -338,8 +224,71 @@ function startAuto() {
 	}, advanceInterval);
 }
 
+function navigatePrev() {
+	if (!positions.length) return;
+	// Permitir navegação mesmo durante animação
+	animating = false;
+	
+	if (autoTimer) {
+		clearInterval(autoTimer);
+		autoTimer = null;
+	}
+	
+	const cw = containerEl.value?.clientWidth || 0;
+	let targetIdx = currentIndex - 1;
+	if (targetIdx < 0) {
+		if (useLoop.value) {
+			targetIdx = positions.length - 1;
+		} else {
+			targetIdx = 0;
+		}
+	}
+	currentIndex = targetIdx;
+	
+	if (singlePerLine) {
+		const pos = positions[currentIndex] ?? 0;
+		animateTo(-pos);
+	} else {
+		const target = -(positions[currentIndex] + itemWidth / 2 - cw / 2);
+		animateTo(target);
+	}
+	
+	setTimeout(() => startAuto(), 150);
+}
+
+function navigateNext() {
+	if (!positions.length) return;
+	// Permitir navegação mesmo durante animação
+	animating = false;
+	
+	if (autoTimer) {
+		clearInterval(autoTimer);
+		autoTimer = null;
+	}
+	
+	const cw = containerEl.value?.clientWidth || 0;
+	let targetIdx = currentIndex + 1;
+	if (targetIdx >= positions.length) {
+		if (useLoop.value) {
+			targetIdx = 0;
+		} else {
+			targetIdx = positions.length - 1;
+		}
+	}
+	currentIndex = targetIdx;
+	
+	if (singlePerLine) {
+		const pos = positions[currentIndex] ?? 0;
+		animateTo(-pos);
+	} else {
+		const target = -(positions[currentIndex] + itemWidth / 2 - cw / 2);
+		animateTo(target);
+	}
+	
+	setTimeout(() => startAuto(), 150);
+}
+
 function pauseAll() {
-	if (!props.hoverPause) return;
 	if (autoTimer) {
 		clearInterval(autoTimer);
 		autoTimer = null;
@@ -347,8 +296,9 @@ function pauseAll() {
 }
 
 function resumeAll() {
-	if (!props.hoverPause) return;
-	startAuto();
+	if (!animating) {
+		startAuto();
+	}
 }
 
 function handleEnter(art: Artwork) {
@@ -358,10 +308,6 @@ function handleLeave(art: Artwork) {
 	emit('arthoverout', art);
 }
 function handleClick(art: Artwork) {
-	if (wasDragging) {
-		wasDragging = false;
-		return;
-	}
 	emit('artclick', art);
 }
 function handleKey(e: KeyboardEvent, art: Artwork) {
@@ -400,14 +346,20 @@ onBeforeUnmount(() => {
 
 <template>
 	<section class="gallery-line-container" role="list" aria-label="Linha de galeria" ref="containerEl" @mouseenter="pauseAll" @mouseleave="resumeAll">
+		<button class="nav-arrow nav-prev" @click="navigatePrev" aria-label="Anterior" title="Anterior">
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+		</button>
+		<button class="nav-arrow nav-next" @click="navigateNext" aria-label="Próximo" title="Próximo">
+			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+		</button>
 		<div
 			class="gallery-line-track"
+			:class="{ animating }"
 			ref="trackEl"
-			@pointerdown="pointerDown"
-			@pointermove="pointerMove"
-			@pointerup="pointerUp"
-			@pointerleave="pointerUp"
-			@pointercancel="pointerCancel"
 			:style="{ transform: `translate3d(${translateX}px,0,0)` }"
 			aria-label="Linha de quadros" role="list"
 		>
@@ -442,7 +394,21 @@ onBeforeUnmount(() => {
 
 <style>
 	/* Edge-to-edge root; allow matching main canvas via max-width var; add relative for fade overlays */
-	.gallery-line-container { width:100%; max-width:var(--gallery-max-width, 100%); margin:0 auto; position:relative; overflow:hidden; padding:2.5% 0; box-sizing:border-box; cursor: grab; touch-action: pan-y; isolation:isolate; }
+	.gallery-line-container { width:100%; max-width:var(--gallery-max-width, 100%); margin:0 auto; position:relative; overflow:hidden; padding:2.5% 0; box-sizing:border-box; isolation:isolate; }
+	
+	/* Navigation arrows */
+	.nav-arrow { position:absolute; top:50%; transform:translateY(-50%); z-index:15; width:48px; height:48px; border-radius:50%; background:rgba(18,20,23,0.92); border:1px solid rgba(255,255,255,0.12); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s ease; opacity:0.75; }
+	.nav-arrow:hover { opacity:1; background:rgba(24,27,31,0.98); transform:translateY(-50%) scale(1.05); }
+	.nav-arrow:active { transform:translateY(-50%) scale(0.98); }
+	.nav-prev { left:clamp(8px, 2%, 24px); }
+	.nav-next { right:clamp(8px, 2%, 24px); }
+	.nav-arrow svg { width:24px; height:24px; }
+	@media (max-width:767px) {
+		.nav-arrow { width:40px; height:40px; opacity:0.6; }
+		.nav-arrow svg { width:20px; height:20px; }
+		.nav-prev { left:4px; }
+		.nav-next { right:4px; }
+	}
 	/* Infinite illusion: blurred transparent fade at left/right */
 	.gallery-line-container::before,
 	.gallery-line-container::after {
@@ -455,10 +421,9 @@ onBeforeUnmount(() => {
 		pointer-events: none;
 		z-index: 12;
 		border-radius: 50%;
-		filter: blur(44px);
-		opacity: 0.97;
+		filter: blur(12px);
+		opacity: 0.85;
 		mix-blend-mode: normal;
-		/* Círculo maior, fade avança mais sobre os quadros */
 	}
 	.gallery-line-container::before {
 		left: 0;
@@ -472,49 +437,33 @@ onBeforeUnmount(() => {
 	@supports (-webkit-mask-image: linear-gradient(#000,#000)) or (mask-image: linear-gradient(#000,#000)) {
 		.gallery-line-container { -webkit-mask-image:linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%); mask-image:linear-gradient(to right, transparent 0%, #000 6%, #000 94%, transparent 100%); }
 	}
-	.gallery-line-container:active { cursor: grabbing; }
-	.gallery-line-track { display:flex; gap:3%; user-select:none; will-change:transform; touch-action: none; }
+	.gallery-line-track { display:flex; gap:3%; user-select:none; }
+	.gallery-line-track.animating { will-change: transform; }
 	.gallery-line-track::-webkit-scrollbar { display:none; }
 	.frame { flex:0 0 min(24%,340px); aspect-ratio:9/19.5; position:relative; margin:0; display:flex; align-items:center; justify-content:center; }
 	.frame.landscape { aspect-ratio:19.5/9; }
-	.open-btn { position:absolute; inset:auto 8px 8px auto; z-index:6; background:#121417d9; backdrop-filter:blur(4px) saturate(1.2); -webkit-backdrop-filter:blur(4px) saturate(1.2); color:#ffffffd8; font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; border:1px solid #2a2f35; border-radius:8px; padding:.45rem .65rem .4rem; cursor:pointer; display:inline-flex; align-items:center; gap:.35rem; font-weight:600; box-shadow:0 4px 16px -6px #000000aa,0 0 0 1px #ffffff10; transition:.25s background,.25s color,.3s transform; }
+	.open-btn { position:absolute; inset:auto 8px 8px auto; z-index:6; background:#121417e6; color:#ffffffd8; font-size:.6rem; letter-spacing:.12em; text-transform:uppercase; border:1px solid #2a2f35; border-radius:8px; padding:.45rem .65rem .4rem; cursor:pointer; display:inline-flex; align-items:center; gap:.35rem; font-weight:600; box-shadow:0 4px 12px -4px #000000aa; transition:.15s ease; }
 	.open-btn:hover, .open-btn:focus-visible { background:#1d2126; color:#fff; outline:none; }
 	.open-btn:active { transform:scale(.9); }
-	.drag-surface { cursor:grab; }
-	.drag-surface:active { cursor:grabbing; }
 
-	/* Phone shell */
-	.phone-shell { position:relative; width:100%; height:100%; border-radius:34px; background:#050607; box-shadow:0 4px 10px -2px rgba(0,0,0,.55),0 14px 35px -10px rgba(0,0,0,.55),0 0 0 1px #ffffff0a,0 0 0 2px #000; padding:10px; box-sizing:border-box; display:flex; }
+	/* Phone shell - simplificado */
+	.phone-shell { position:relative; width:100%; height:100%; border-radius:34px; background:#050607; box-shadow:0 8px 24px -8px rgba(0,0,0,.6), 0 0 0 1px #ffffff08; padding:10px; box-sizing:border-box; display:flex; }
 	.frame.landscape .phone-shell { padding:8px 10px; }
-	.phone-shell::before { content:""; position:absolute; inset:0; border-radius:34px; background:linear-gradient(160deg,#22242a,#0f1013 65%,#1c2228); mix-blend-mode:normal; pointer-events:none; }
-	.phone-shell::after { content:""; position:absolute; inset:2px; border-radius:30px; background:radial-gradient(circle at 30% 20%,#ffffff10,transparent 60%); pointer-events:none; }
 
 	/* Notch portrait */
-	.frame:not(.landscape) .phone-shell > .notch { position:absolute; top:4px; left:50%; width:88px; height:18px; background:#050607; border-radius:0 0 14px 14px; transform:translateX(-50%); box-shadow:0 2px 4px -2px #000000aa, 0 0 0 1px #0d0f12; }
+	.frame:not(.landscape) .phone-shell > .notch { position:absolute; top:4px; left:50%; width:88px; height:18px; background:#050607; border-radius:0 0 14px 14px; transform:translateX(-50%); box-shadow:0 2px 4px -2px #000000aa; }
 	/* Side notch (simulate camera) for landscape (optional) */
-	.frame.landscape::after { content:""; position:absolute; top:50%; left:6px; width:18px; height:88px; background:#050607; border-radius:14px 0 0 14px; transform:translateY(-50%); box-shadow:0 0 0 1px #0d0f12; }
+	.frame.landscape::after { content:""; position:absolute; top:50%; left:6px; width:18px; height:88px; background:#050607; border-radius:14px 0 0 14px; transform:translateY(-50%); }
 
 	.screen-wrap { position:relative; z-index:2; flex:1; border-radius:26px; overflow:hidden; background:#000; display:flex; }
-	.screen-wrap img { width:100%; height:100%; object-fit:cover; display:block; filter:saturate(1.08) contrast(1.05); }
-	/* Screen glow overlay */
-	.screen-wrap::after { content:""; position:absolute; inset:0; background:
-		radial-gradient(circle at 50% 35%, rgba(120,160,255,.55), rgba(80,40,120,.25) 40%, rgba(0,0,0,.55) 75%),
-		linear-gradient(180deg,rgba(255,255,255,.15),rgba(0,0,0,0) 55%);
-		mix-blend-mode:screen; opacity:.55; pointer-events:none; transition:opacity .5s, filter .6s; }
-	.frame:hover .screen-wrap::after, .frame:focus-within .screen-wrap::after { opacity:.95; filter:blur(1px) brightness(1.08); }
+	.screen-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
 	.frame.landscape .screen-wrap { border-radius:26px; }
 
-	/* Accent border glow (hover/focus) */
 	.frame { position:relative; }
-	.frame::before { content:""; position:absolute; inset:0; border-radius:34px; padding:2px; background:linear-gradient(140deg,#3d9aff,#7d41ff 45%,#ff2e63); -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; opacity:.18; transition:opacity .4s, filter .55s, transform .6s; filter:blur(6px) brightness(.85); }
-	.frame:hover::before, .frame:focus-within::before { opacity:.9; filter:blur(12px) brightness(1.15) saturate(1.2); transform:scale(1.02); }
-	/* Add inner subtle glow */
-	.frame::after { content:""; position:absolute; inset:4px; border-radius:30px; background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.08),rgba(255,255,255,0) 70%); opacity:.35; mix-blend-mode:overlay; pointer-events:none; transition:opacity .4s; }
-	.frame:hover::after, .frame:focus-within::after { opacity:.55; }
 
 	figcaption { left:50%; }
 
-	figcaption { position:absolute; left:50%; bottom:-2.1rem; transform:translateX(-50%); background:rgba(0,0,0,.65); color:#fff; padding:.35rem .7rem; font-size:.75rem; line-height:1; border-radius:999px; white-space:nowrap; opacity:0; transition:opacity .3s; pointer-events:none; }
+	figcaption { position:absolute; left:50%; bottom:-2.1rem; transform:translateX(-50%); background:rgba(0,0,0,.65); color:#fff; padding:.35rem .7rem; font-size:.75rem; line-height:1; border-radius:999px; white-space:nowrap; opacity:0; transition:opacity .15s ease; pointer-events:none; }
 	.frame:hover figcaption { opacity:1; }
 	@media (max-width:767px){
 		.gallery-line-container { padding:3% 0 4%; }

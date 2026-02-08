@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-import GalleryLine from '@/lib/components/GalleryLine.vue';
+// import GalleryLine from '@/lib/components/GalleryLine.vue';
 import GalleryLineSecond from '@/lib/components/GalleryLineSecond.vue';
 import type { Artwork } from '@/lib/components/types';
 
@@ -139,13 +139,6 @@ onBeforeUnmount(() => {
 			<p>Carregando galeria...</p>
 		</div>
 		<template v-else-if="artworks.length > 0">
-			<GalleryLine
-				:artworks="artworks"
-				:speed="2"
-				@artclick="openModal"
-				@arthover="showHover"
-				@arthoverout="hideHover"
-			/>
 			<GalleryLineSecond
 				:artworks="artworksSecond"
 				:speed="1.5"

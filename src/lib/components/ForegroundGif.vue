@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import skaura from '$lib/assets/textures/skaura.gif';
+import neve from '$lib/components/neve.gif';
 
 const props = withDefaults(
 	defineProps<{
@@ -16,8 +16,8 @@ const props = withDefaults(
 		useIdle?: boolean;
 	}>(),
 	{
-		src: skaura,
-		width: 'min(42vmin, 520px)',
+		src: neve,
+		width: 'min(100vmin, 1800px)',
 		align: 'right',
 		bottomOffset: '4vh',
 		parallax: true,
