@@ -222,7 +222,7 @@ onBeforeUnmount(() => {
             <span class="label">VTuber values</span>
           </RouterLink>
         </li>
-        <li>
+        <!-- <li>
           <RouterLink
             to="/comissao"
             class="nav-btn"
@@ -233,6 +233,19 @@ onBeforeUnmount(() => {
             <span class="icon" aria-hidden="true" v-html="icon('mail')"></span>
             <span class="label">Comissão</span>
           </RouterLink>
+        </li> -->
+        <li>
+          <a
+            href="https://forms.gle/XRhPfuTabacgzqTR7"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="nav-btn"
+            title="Comissão"
+            style="--c1:#ff4b2e;--c2:#c72d17"
+          >
+            <span class="icon" aria-hidden="true" v-html="icon('mail')"></span>
+            <span class="label">Comissão</span>
+          </a>
         </li>
       </ul>
     </nav>
