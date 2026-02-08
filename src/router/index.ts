@@ -40,7 +40,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/Portfolio/'),
   routes,
   scrollBehavior() {
     return { top: 0 };
