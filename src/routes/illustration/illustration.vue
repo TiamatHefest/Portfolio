@@ -50,19 +50,19 @@ onMounted(() => {
     </div>
     <p class="obs">Valores em <b>USD</b>. O símbolo "+" indica valor base inicial <b>negociável</b> (pode subir com nível de detalhe, personagem extra, design, revisões). Faixa de fundos mostra mínimo–máximo típico. Para orçamento final envie: tipo (busto, full, chibi), nível (simples ou render), referências, resolução e prazo.</p>
   </section>
-   <div class="gallery">
-      <div>
+		<div>
           <a href="https://forms.gle/XRhPfuTabacgzqTR7"
             target="_blank"
             rel="noopener noreferrer"
-            class="iwant-btn"
+            class="nav-btn"
             title="Comissão"
-            style="--c1:#2ef1ff;--c2:#171dc7"
+            style="--c1:#ff4b2e;--c2:#c72d17"
           >
-            <span class="icon" aria-hidden="true" v-html="icon('mail')"></span>
             <span class="label">Comissão</span>
           </a>
         </div>
+   <div class="gallery">
+      <p>wait...</p>
       <figure v-for="w in works" :key="w.src">
         <img :src="w.src" :alt="w.title" />
         <figcaption>{{ w.title }}</figcaption>
@@ -108,7 +108,8 @@ onMounted(() => {
 .pricing .obs b{color:#fff;font-weight:600;}
 
 /* I Want */
-.iwant-nav a, .iwant-btn { --btn-bg:#0f1114; --c-border:color-mix(in srgb,var(--c1,#6a6a6a) 58%, #121418); --c-glow:color-mix(in srgb,var(--c1,#6a6a6a) 35%, transparent); display:flex; gap:.6rem; align-items:center; color:#d4d2d6; text-decoration:none; padding:.52rem .6rem; border-radius:16px; position:relative; font-family:'Doto', system-ui, sans-serif; font-weight:500; transform:translateY(0); background: var(--btn-bg); box-shadow: 0 1px 2px rgba(0,0,0,.55), 0 0 0 1px var(--c-border), inset 0 0 0 1px #ffffff08; transition: background .2s, transform .2s, box-shadow .25s, color .2s; isolation:isolate; }
+.iwant-nav a, .iwant-btn { --btn-bg:#0f1114; --c-border:color-mix(in srgb,var(--c1,#6a6a6a) 58%, #121418); --c-glow:color-mix(in srgb,var(--c1,#6a6a6a) 35%, transparent); display:flex; gap:.6rem; align-items:center; color:#d4d2d6; text-decoration:none; padding:.52rem .6rem; border-radius:16px; position:relative; font-family:'Doto', system-ui, sans-serif; font-weight:500; transform:translateY(0); background: var(--btn-bg); box-shadow: 0 1px 2px rgba(0,0,0,.55), 0 0 0 1px var(--c-border), 
+	inset 0 0 0 1px #ffffff08; transition: background .2s, transform .2s, box-shadow .25s, color .2s; isolation:isolate; }
 .iwant-nav a::before, .nav-btn::before { content:""; position:absolute; inset:1px; border-radius:inherit; background:
     linear-gradient(145deg, color-mix(in srgb,var(--c1,#555) 16%, transparent), color-mix(in srgb,var(--c2,#333) 8%, transparent));
     opacity:.38; transition:opacity .25s; pointer-events:none; }
