@@ -384,6 +384,7 @@ onBeforeUnmount(() => {
   .site-sidebar.collapsed a[title]:hover::after { content: attr(title); position:fixed; left: calc(var(--sidebar-collapsed-w) + 12px); top: auto; transform: translateY(-50%); background: rgba(0,0,0,0.8); color:#fff; padding:.5rem .7rem; border-radius:6px; white-space:nowrap; z-index:200; }
 
   /* responsive: transform into off-canvas drawer below 980px */
+  @media (max-width:1920px){ body{ --sidebar-w:290px; } }
   @media (max-width:1200px){ body{ --sidebar-w:290px; } }
   @media (max-width:1100px){ body{ --sidebar-w:270px; } }
   @media (max-width:1048px){ body{ --sidebar-w:260px; } }
