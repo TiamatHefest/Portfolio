@@ -19,38 +19,41 @@ onMounted(() => {
         <div class="group">
           <h3>Character Design</h3>
           <ul>
-            <li><span>Chibi</span><strong>575+</strong></li>
-            <li><span>Full</span><strong>750+</strong></li>
+            <li><span>Chibi</span><strong>250+</strong></li>
+            <li><span>Full</span><strong>475+</strong></li>
           </ul>
         </div>
         <div class="group">
-          <h3>Pacotes / Emotes</h3>
+          <h3>Pacotes </h3>
           <ul>
-            <li><span>Emotes (6)</span><strong>250+</strong></li>
-            <li><span>Chibi + Design</span><strong>425+</strong></li>
-          </ul>
+    	      <li><span>Emotes (12)</span><strong>125+</strong></li>
+	          <li><span>Chibi + emotes</span><strong>275+</strong></li>
+			  <li><span>Chibi + emotes</span><strong>275+</strong></li>
+		  	<li><span>Chibi + emotes + Vtuber2D</span><strong>475+</strong></li>
+		  	<li><span>Rig + Concept</span><strong>325+</strong></li>
+		  </ul>
         </div>
         <div class="group">
-          <h3>Layout & Rig</h3>
+          <h3>Layout,Concept & Rig</h3>
           <ul>
-            <li><span>Layout VTuber</span><strong>125+</strong></li>
-            <li><span>Rig + Design</span><strong>625+</strong></li>
-            <li><span>Rig 2D(Apenas)</span><strong>100+</strong></li>
-          </ul>
+			<li><span>Layout para Lives(Codigo e Arte)</span><strong>125+</strong></li>
+            <li><span>Concept VTuber</span><strong>185+</strong></li>
+            <li><span>Rig 2D(Apenas)</span><strong>165+</strong></li>
+			</ul>
         </div>
         <div class="group">
           <h3>3D / Outros</h3>
           <ul>
-            <li><span>VTuber 3D</span><strong>1250+</strong></li>
-            <li><span>Rig + Design</span><strong>825+</strong></li>
+            <li><span>VTuber 3D</span><strong>850+</strong></li>
+            <li><span>Rig + Design</span><strong>625+</strong></li>
           </ul>
         </div>
       </div>
 
       <p class="obs">Canvas Padrão Inicial: <strong>2560×2560</strong></p>
 
-      <p class="obs">Valores em <b>USD</b>. "+" = base inicial negociável (complexidade, props, expressões extras, revisões e prazo podem alterar). Canvas padrão 2560×2560 (pode ajustar conforme necessidade). Para orçamento final envie: referências, estilo desejado, número de expressões / emotes, rig alvo (ex: VTube Studio), prazo e uso pretendido.</p>
-    </section>
+      <p class="obs">Valores em <b>REAL</b>. O símbolo "+" indica valor base inicial <b>negociável</b> (pode subir com nível de detalhe, personagem extra, design, revisões). Faixa de fundos mostra mínimo–máximo típico. Para orçamento final envie: tipo (busto, full, chibi), nível (simples ou render), referências, resolução e prazo.</p>
+  </section>
       <div class="gallery">
         <p v-if="assets.length === 0">Em breve...</p>
         <figure v-for="a in assets" :key="a.src">
