@@ -19,37 +19,37 @@ onMounted(() => {
         <div class="group">
           <h3>Tamanho (Canvas)</h3>
           <ul>
-            <li><span>32x32</span><strong>15+</strong></li>
-            <li><span>64x64</span><strong>30+</strong></li>
-            <li><span>128x128</span><strong>45+</strong></li>
+            <li><span>32x32</span><strong>45+</strong></li>
+            <li><span>64x64</span><strong>60+</strong></li>
+            <li><span>128x128</span><strong>85+</strong></li>
           </ul>
         </div>
         <div class="group">
           <h3>Background (Tipo)</h3>
           <ul>
-            <li><span>Simples</span><strong>15+</strong></li>
-            <li><span>Complexo</span><strong>30+</strong></li>
+            <li><span>Simples</span><strong>45+</strong></li>
+            <li><span>Complexo</span><strong>60+</strong></li>
           </ul>
         </div>
         <div class="group">
           <h3>Tipo de Animação</h3>
           <ul>
-            <li><span>Simples</span><strong>20+</strong></li>
-            <li><span>Complexa</span><strong>40+</strong></li>
+            <li><span>Simples</span><strong>50+</strong></li>
+            <li><span>Complexa</span><strong>80+</strong></li>
           </ul>
         </div>
         <div class="group">
           <h3>Background (Tamanho)</h3>
           <ul>
-            <li><span>Médio</span><strong>100+</strong></li>
-            <li><span>Grande</span><strong>125+</strong></li>
+            <li><span>Médio</span><strong>120+</strong></li>
+            <li><span>Grande</span><strong>150+</strong></li>
           </ul>
         </div>
         <div class="group">
           <h3>Background Animado</h3>
           <ul>
-            <li><span>Simples</span><strong>40+</strong></li>
-            <li><span>Complexo</span><strong>80+</strong></li>
+            <li><span>Simples</span><strong>60+</strong></li>
+            <li><span>Complexo</span><strong>100+</strong></li>
           </ul>
         </div>
         <div class="group">
@@ -73,15 +73,15 @@ onMounted(() => {
         <div class="group">
           <h3>KIT / Packs</h3>
           <ul>
-            <li><span>6 Personagens</span><strong>45+</strong></li>
-            <li><span>15 Personagens</span><strong>90+</strong></li>
-            <li><span>3 Construções</span><strong>120+</strong></li>
-            <li><span>Tilesheet 6 Terrenos*</span><strong>20+</strong></li>
+            <li><span>6 Personagens</span><strong>70+</strong></li>
+            <li><span>15 Personagens</span><strong>110+</strong></li>
+            <li><span>3 Construções</span><strong>145+</strong></li>
+            <li><span>Tilesheet 6 Terrenos*</span><strong>40+</strong></li>
           </ul>
         </div>
       </div>
-    <p class="obs">Valores em <b>USD</b>. O número com "+" indica um valor base inicial <b>negociável</b> (pode ajustar conforme complexidade, quantidade de frames, revisões e escopo). Para orçamento fechado envie: resolução desejada, quantidade de frames por animação, referências visuais e prazo.</p>
-    </section>
+    <p class="obs">Valores em <b>REAL</b>. O símbolo "+" indica valor base inicial <b>negociável</b> (pode subir com nível de detalhe, personagem extra, design, revisões). Faixa de fundos mostra mínimo–máximo típico. Para orçamento final envie: tipo (busto, full, chibi), nível (simples ou render), referências, resolução e prazo.</p>
+  </section>
       <div class="gallery">
         <p v-if="sprites.length === 0">Em breve...</p>
         <figure v-for="s in sprites" :key="s.src">
