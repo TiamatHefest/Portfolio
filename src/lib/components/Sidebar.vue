@@ -43,18 +43,18 @@ const joker = exampleGif;
 const subtitle = 'Um rainha draconica Que possui a propria forja criando obras';
 
 const socials: Social[] = [
-	{ name: 'X / Twitter', key: 'x', url: '#', c1: '#1d9bf0', c2: '#0f1419', img: xtwitterSvg },
-	{ name: 'YouTube', key: 'yt', url: '#', c1: '#ff0000', c2: '#b80000', img: youtubeSvg },
-	{ name: 'Instagram', key: 'instagram', url: '#', c1: '#f58529', c2: '#dd2a7b', img: instagramSvg },
-	{ name: 'Substack', key: 'substack', url: '#', c1: '#ff6719', c2: '#cc4f10', img: substackSvg },
-	{ name: 'Reddit', key: 'reddit', url: '#', c1: '#ff4500', c2: '#c23100', img: redditSvg },
+	{ name: 'X / Twitter', key: 'x', url: 'https://x.com/Tiamat_H3F3ST_', c1: '#1d9bf0', c2: '#0f1419', img: xtwitterSvg },
+	{ name: 'YouTube', key: 'yt', url: 'https://www.youtube.com/', c1: '#ff0000', c2: '#b80000', img: youtubeSvg },
+	{ name: 'Instagram', key: 'instagram', url: 'https://www.instagram.com/h3f3st_/', c1: '#f58529', c2: '#dd2a7b', img: instagramSvg },
+	{ name: 'Substack', key: 'substack', url: 'https://substack.com/@tiamatblacksmith', c1: '#ff6719', c2: '#cc4f10', img: substackSvg },
+	{ name: 'Reddit', key: 'reddit', url: 'https://www.reddit.com/r/Kingdom_Of_Tiamat/', c1: '#ff4500', c2: '#c23100', img: redditSvg },
 	{ name: 'Webtoon', key: 'webtoon', url: '#', c1: '#00d564', c2: '#00a84c', img: webtoonSvg },
-	{ name: 'Discord', key: 'discord', url: '#', c1: '#5865f2', c2: '#414cc7', img: discordSvg },
-	{ name: 'Newgrounds', key: 'newgrounds', url: '#', c1: '#ff3ca6', c2: '#b8166d', img: newgroundsSvg },
+	{ name: 'Discord', key: 'discord', url: 'https://discord.gg/rwCD8k4AGd', c1: '#5865f2', c2: '#414cc7', img: discordSvg },
+	{ name: 'Newgrounds', key: 'newgrounds', url: 'https://hephestaus.newgrounds.com/', c1: '#ff3ca6', c2: '#b8166d', img: newgroundsSvg },
 ];
 //	{ name: 'Wattpad', key: 'wattpad', url: '#', c1: '#ff6a00', c2: '#e65100', img: wattpadSvg },
 // 	{ name: 'Facebook', key: 'facebook', url: '#', c1: '#1877f2', c2: '#0d52a1', img: facebookSvg },
-	//	{ name: 'ArtStation', key: 'art', url: '#', c1: '#13aff0', c2: '#006a90', img: artstationSvg },
+//	{ name: 'ArtStation', key: 'art', url: '#', c1: '#13aff0', c2: '#006a90', img: artstationSvg },
 //	{ name: 'Behance', key: 'behance', url: '#', c1: '#0057ff', c2: '#003ca8', img: behanceSvg },
 
 	const route = useRoute();
