@@ -50,13 +50,25 @@ onMounted(() => {
     </div>
     <p class="obs">Valores em <b>USD</b>. O símbolo "+" indica valor base inicial <b>negociável</b> (pode subir com nível de detalhe, personagem extra, design, revisões). Faixa de fundos mostra mínimo–máximo típico. Para orçamento final envie: tipo (busto, full, chibi), nível (simples ou render), referências, resolução e prazo.</p>
   </section>
-    <div class="gallery">
+		<li>
+          <a href="https://forms.gle/XRhPfuTabacgzqTR7"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="nav-btn"
+            title="Comissão"
+            style="--c1:#2ef1ff;--c2:#171dc7"
+          >
+            <span class="icon" aria-hidden="true" v-html="icon('mail')"></span>
+            <span class="label">Comissão</span>
+          </a>
+        </li>
+   <!-- <div class="gallery">
       <p v-if="works.length === 0">Em breve...</p>
       <figure v-for="w in works" :key="w.src">
         <img :src="w.src" :alt="w.title" />
         <figcaption>{{ w.title }}</figcaption>
       </figure>
-    </div>
+    </div> -->
   </main>
 </template>
 
