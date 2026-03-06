@@ -109,14 +109,14 @@ onMounted(() => {
 
 /* I Want */
 .iwant-nav a, .iwant-btn { --btn-bg:#0f1114; --c-border:color-mix(in srgb,var(--c1,#6a6a6a) 58%, #121418); --c-glow:color-mix(in srgb,var(--c1,#6a6a6a) 35%, transparent); display:flex; gap:.6rem; align-items:center; color:#d4d2d6; text-decoration:none; padding:.52rem .6rem; border-radius:16px; position:relative; font-family:'Doto', system-ui, sans-serif; font-weight:500; transform:translateY(0); background: var(--btn-bg); box-shadow: 0 1px 2px rgba(0,0,0,.55), 0 0 0 1px var(--c-border), 
-	inset 0 0 0 1px #ffffff08; transition: background .2s, transform .2s, box-shadow .25s, color .2s; isolation:isolate; }
+	inset 0 0 0 1px #ffffff; transition: background .2s, transform .2s, box-shadow .25s, color .2s; isolation:isolate; }
 .iwant-nav a::before, .nav-btn::before { content:""; position:absolute; inset:1px; border-radius:inherit; background:
     linear-gradient(145deg, color-mix(in srgb,var(--c1,#555) 16%, transparent), color-mix(in srgb,var(--c2,#333) 8%, transparent));
     opacity:.38; transition:opacity .25s; pointer-events:none; }
 .iwant-btn { background:none; border:none; cursor:pointer; }
 	  @media (prefers-reduced-motion: reduce){
 .iwant-nav a, .iwant-btn { transition: background .18s, box-shadow .28s; } }
-.iwant-btn { background:none; border:none; cursor:pointer; }
+	
 /* Gallery */
 .gallery { display:grid; gap:1rem; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); }
 figure { margin:0; background:#201626; border:1px solid #322237; border-radius:14px; overflow:hidden; box-shadow:0 4px 14px -8px #000,0 0 0 1px #ffffff05; }
