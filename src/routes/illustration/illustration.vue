@@ -54,7 +54,7 @@ onMounted(() => {
           <a href="https://forms.gle/XRhPfuTabacgzqTR7"
             target="_blank"
             rel="noopener noreferrer"
-            class="nav-btn"
+            class="iwant-btn"
             title="Comissão"
             style="--c1:#ff4b2e;--c2:#c72d17"
           >
