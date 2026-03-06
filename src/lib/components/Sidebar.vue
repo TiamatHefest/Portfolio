@@ -384,9 +384,9 @@ onBeforeUnmount(() => {
   .site-sidebar.collapsed a[title]:hover::after { content: attr(title); position:fixed; left: calc(var(--sidebar-collapsed-w) + 12px); top: auto; transform: translateY(-50%); background: rgba(0,0,0,0.8); color:#fff; padding:.5rem .7rem; border-radius:6px; white-space:nowrap; z-index:200; }
 
   /* responsive: transform into off-canvas drawer below 980px */
-  @media (max-width:1200px){ body{ --sidebar-w:240px; } }
-  @media (max-width:1100px){ body{ --sidebar-w:230px; } }
-  @media (max-width:1024px){ body{ --sidebar-w:220px; } }
+  @media (max-width:1200px){ body{ --sidebar-w:284px; } }
+  @media (max-width:1100px){ body{ --sidebar-w:254px; } }
+  @media (max-width:1048px){ body{ --sidebar-w:244px; } }
   @media (max-width:980px){
     body{ --sidebar-w: 100vw; }
     .site-sidebar { position:fixed; inset:0; width:100vw; max-width:100vw; /* evita exceder */
