@@ -20,35 +20,32 @@ onMounted(() => {
     <h2 id="ill-pricing-heading">Tabela de Valores & Escopo</h2>
     <div class="pricing-grid">
       <div class="group">
-        <h3>Personagem (Simples)</h3>
+        <h3>Personagem (Sketch + Lineart)</h3>
         <ul>
-          <li><span>Busto Simples</span><strong>125+</strong></li>
-          <li><span>Coxa para Cima Simples</span><strong>150+</strong></li>
-          <li><span>Fullbody Simples</span><strong>200+</strong></li>
-          <li><span>Chibi Simples</span><strong>75+</strong></li>
-          <li><span>Corpo Inteiro Simples</span><strong>325+</strong></li>
+          <li><span>Busto Simples</span><strong>50+</strong></li>
+          <li><span>Coxa para Cima Simples</span><strong>75+</strong></li>
+          <li><span>Fullbody Simples</span><strong>125+</strong></li>
+          <li><span>Chibi Simples</span><strong>25+</strong></li>
         </ul>
       </div>
       <div class="group">
         <h3>Personagem (Renderizado)</h3>
         <ul>
-          <li><span>Cabeça Renderizado</span><strong>225+</strong></li>
-          <li><span>Busto Renderizado</span><strong>275+</strong></li>
-          <li><span>Coxa para Cima Renderizado</span><strong>425+</strong></li>
-          <li><span>Corpo Inteiro Renderizado</span><strong>575+</strong></li>
-          <li><span>Chibi Renderizado</span><strong>135+</strong></li>
-          <li><span>Full Illustration Renderizado</span><strong>525+</strong></li>
+          <li><span>Busto Renderizado</span><strong>75+</strong></li>
+          <li><span>Coxa para Cima Renderizado</span><strong>100+</strong></li>
+          <li><span>Corpo Inteiro Renderizado</span><strong>150+</strong></li>
+          <li><span>Chibi Renderizado</span><strong>50+</strong></li>
         </ul>
       </div>
       <div class="group">
-        <h3>Fundo</h3>
+        <h3>Cenário</h3>
         <ul>
-          <li><span>Fundo Simples</span><strong>20–60</strong></li>
-            <li><span>Fundo Complexo</span><strong>75–175</strong></li>
+          <li><span>Cenário Simples</span><strong>20–60</strong></li>
+            <li><span>Cenário Complexo</span><strong>75–175</strong></li>
         </ul>
       </div>
     </div>
-    <p class="obs">Valores em <b>USD</b>. O símbolo "+" indica valor base inicial <b>negociável</b> (pode subir com nível de detalhe, personagem extra, design, revisões). Faixa de fundos mostra mínimo–máximo típico. Para orçamento final envie: tipo (busto, full, chibi), nível (simples ou render), referências, resolução e prazo.</p>
+    <p class="obs">Valores em <b>REAL</b>. O símbolo "+" indica valor base inicial <b>negociável</b> (pode subir com nível de detalhe, personagem extra, design, revisões). Faixa de fundos mostra mínimo–máximo típico. Para orçamento final envie: tipo (busto, full, chibi), nível (simples ou render), referências, resolução e prazo.</p>
   </section>
 		<div>
           <a href="https://forms.gle/XRhPfuTabacgzqTR7"
